@@ -3,6 +3,26 @@
 
 ## 1. Primitive Types
 
+There are `4` ways we can assign or let Typscript `infer` the types in case of `Primitive types`.
+We can take an example of `number` type for this like below,
+```typescript
+let a = 1234 // number
+var b = Infinity * 0.10 // number
+const c = 5678 // 5678
+let d = a < b // boolean
+let e: number = 100 // number
+let f: 26.218 = 26.218 // 26.218
+let g: 26.218 = 10 // Error TS2322: Type '10' is not assignable
+ // to type '26.218'.
+```
+1. You can let TypeScript infer that your value is a number (a and b).
+2. You can use const so TypeScript infers that your value is a specific number (c).
+3. You can tell TypeScript explicitly that your value is a number (e).
+4. You can tell TypeScript explicitly that your value is a specific number (f and g).
+
+this is held true for `primitive types` like  `string`,`boolean`,`bifgint`.
+
+
 ### a. `string`
 Represents textual data enclosed in single or double quotes.
 ```typescript
@@ -131,6 +151,71 @@ let person: { name: string; age: number; isAdmin: boolean } = {
 };
 console.log(person.name);
 ```
+
+`Note` : Do not use `Object` as an type of your object. It's not good practice as it will not allow you to add, remove, access or orverride any value in the
+object.
+Example :
+ ```typescript
+let person:Object = {
+  name: "John",
+  age: 25,
+  isAdmin: false,
+};
+console.log(person.name); //Error: Property 'name' does not exist on type 'Object'.
+person.name = "op"; //Error
+delete person.age;  //Error
+person.address = "something"; //Error
+```
+
+Now if we try to add new property to the person object typescript will complain about it.
+```typescript
+person.add="JD town" //Error : Property 'add' does not exist on type '{ name: string; age: number; isAdmin: boolean; }
+```
+
+We have to strickly follow the `blueprint` or `type` of the object. Also if we want to assign a new object value to the person object then
+that object should follow the `blueprint` or `type` of the object as well. `Note` that `additional` properties in a new object are `allowed`
+but `ommitting` properties that are in the `blueprint` or the `type` of original object is `not allowed`.
+
+```typescript
+let person: { name: string; age: number; isAdmin: boolean } = {
+  name: "John",
+  age: 25,
+  isAdmin: false,
+};
+
+let newObj = {
+    name:"sam",
+    age:45,
+    //age:45, // ommiting age property Wrong ! Error :Property 'age' is missing in type
+    isAdmin:true, 
+    add:"JD town" //Addition properties are allowed.
+}
+
+person = newObj;
+console.log(person) //output ==> {"name": "sam","age": 45,"isAdmin": true,"add": "JD town"} 
+```
+
+Also If you ever want to use `delet` i.e., to remove a property from your object you have to make it `optional` in the object type itself it is true for
+objects delclared with the `const` keyword.
+like below,
+ ```typescript
+let person:{   
+    name:string,
+    age?:number,  // <== making this property optional so that we can delete it in future.
+    //age:number <== this is invalid if want to use delete on this property.
+    isAdmin:boolean
+} = {
+  name: "John",
+  age: 25,
+  isAdmin: false,
+};
+
+delete person.age;
+console.log(person); // output ==> {"name": "John","isAdmin": false} 
+
+```
+
+
 
 ---
 
